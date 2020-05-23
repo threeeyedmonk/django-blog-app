@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <title>Register</title>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="row">
+          <p><br></p>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <h3>Fill in required details below to register.</h3>
+            <form method="POST">
+              {{ form.as_p }}
+              {% csrf_token %}
+              <input type="submit" class='btn btn-primary' value="Register">
+            </form>
+          </div>
+          <div class="col-lg-6">
+            <p class="brand-name-title" style="font-family:'Broadway';color:Tomato;font-size:5em;">Blog<br>&nbsp;&nbsp;&nbsp;Point</p><br>
+            <p style="font-family:'Calibri';color:grey;">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div>
+        </div>
+      </div>
+
+    </header>
+  </body>
+</html>
