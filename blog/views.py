@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from blog.forms import RegisterForm, CreatePostForm
-from blog.models import Post
+from blog.forms import UserForm, UserProfileForm, CreatePostForm
+from blog.models import Post, UserProfile
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
@@ -12,6 +12,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 #@login_required
+
+class UserProfileView(LoginRequiredMixin, DetailView):
+    '''
+    Displays logged in user's profile_image
+    '''
+    context_object_name = 'userprofile'
+    model = UserProfile
+    template_name = 'blog/userprofile.html'
+
+    def get_object(self):
+        return self.request.user
+
 class PostListView(ListView):
     model = Post
     template_name = 'blog/home.html'
@@ -50,20 +62,30 @@ def createpost(request):
 
 
 def register(request):
-    form = RegisterForm
 
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        userform = UserForm(data=request.POST)
+        userprofileform = UserProfileForm(data=request.POST)
 
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
+        if userform.is_valid() and userprofileform.is_valid():
+            user = userform.save(commit=False)
+            user.set_password(userform.cleaned_data['password'])
             user.save()
+            profile = userprofileform.save(commit=False)
+            profile.user = user
+            if 'profile_image' in request.FILES:
+                profile.profile_image = request.FILES['profile_image']
+            profile.save()
+
             return redirect('blog:home')
         else:
             print("ERROR: Invalid Form")
     else:
-        return render(request, 'blog/register.html', {'form': form})
+        userform = UserForm()
+        userprofileform = UserProfileForm()
+
+    return render(request, 'blog/register.html', {'userform': userform,
+                                                    'userprofileform': userprofileform})
 
 def userlogin(request):
     if request.method == 'POST':

@@ -2,7 +2,7 @@
 
 {% block body_block %}
   <div class="jumbotron">
-    <h1>Welcome to <span style="font-family:'Broadway';color:Tomato;font-size:2em;">Blog Point</span></h1>
+    <h1>Welcome to <span style="font-family:'Broadway';color: #01a9ac;font-size:2em;">Blog Point</span></h1>
     <h5>Please see all the latest blog posts below:</h5>
   </div>
 
@@ -12,7 +12,7 @@
       {% for post in post_list %}
         <tr>
           <td>
-            <a style="color:white;" href="{{ post.id }}"><span style="font-size:1.5em;">{{ post.post_title }}</span></a><br>
+            <a style="color:white;" href="post/{{ post.id }}"><span style="font-size:1.5em;">{{ post.post_title }}</span></a><br>
             <span>Posted by <strong>{{ post.author }}</strong> on {{ post.post_created }}</span>
           </td>
         </tr>

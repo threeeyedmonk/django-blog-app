@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{% static 'css/profile_style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <title>Blog Point</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <!-- Navbar content -->
+      <a class="navbar-brand" href="{% url 'blog:home' %}">BLOG POINT</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin:index' %}">ADMIN</a>
+          </li>
+
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'blog:userprofile' %}">PROFILE</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'blog:createpost' %}">CREATE</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'blog:userlogout' %}">LOGOUT</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'blog:userlogin' %}">Login</a>
+          </li>
+        {% endif %}
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="container-background">
+        <div class="wrapper">
+          <div class="left">
+            <img src="/blog{{ user.userprofile.profile_image.url }}" alt="user" width=300 height=350 />
+            <h4>{{ user.first_name }} {{ user.last_name }}</h4>
+            <p>{{ user.username }}</p>
+          </div>
+          <div class="right">
+
+            <div class="info">
+              <h3>Information</h3>
+
+              <div class="info_data">
+                <div class="data">
+                  <h4>Email</h4>
+                  <p>{{ user.email }}</p>
+                </div>
+                <div class="data">
+                  <h4>City</h4>
+                  <p>{{ user.userprofile.city }}</p>
+                </div>
+              </div> <!-- End of info_data:  -->
+
+              <div class="info_data">
+                <div class="data">
+                  <h4>Website</h4>
+                  <p>{{ user.userprofile.website }}</p>
+                </div>
+                <div class="data">
+                  <h4>Country</h4>
+                  <p>{{ user.userprofile.country }}</p>
+                </div>
+              </div>  <!-- End of info_data -->
+            </div>  <!-- End of info -->
+
+            <div class="post">
+              <h3>Posts</h3>
+              <div class="post_data">
+                {% for post in user.posts.all %}
+                <a style="color:black;" href="post/{{ post.id }}"><h4>{{ post.post_title }}</h4></a>
+                <p>{{ post.post_created}}</p>
+                {% endfor %}
+              </div>
+            </div>   <!-- End of post -->
+
+          </div> <!-- End of right -->
+        </div>   <!-- End of wrapper  -->
+      </div>    <!-- End of container-background -->
+    </div>  <!-- End of container -->
+  </body>
+</html>
