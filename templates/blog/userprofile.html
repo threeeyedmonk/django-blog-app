@@ -29,6 +29,9 @@
             <a class="nav-link" href="{% url 'blog:createpost' %}">CREATE</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="{% url 'blog:showdrafts' %}">DRAFTS</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{% url 'blog:userlogout' %}">LOGOUT</a>
           </li>
         {% else %}
@@ -76,13 +79,11 @@
             </div>  <!-- End of info -->
 
             <div class="post">
-              <h3>Posts</h3>
-              <div class="post_data">
-                {% for post in user.posts.all %}
-                <a style="color:black;" href="post/{{ post.id }}"><h4>{{ post.post_title }}</h4></a>
-                <p>{{ post.post_created}}</p>
-                {% endfor %}
-              </div>
+              <a href="{% url 'blog:showposts' %}"><h3>VIEW USER POSTS</h3></a>
+            </div>   <!-- End of post -->
+
+            <div class="post">
+              <a href="{% url 'blog:showdrafts' %}"><h3>VIEW YOUR DRAFTS</h3></a>
             </div>   <!-- End of post -->
 
           </div> <!-- End of right -->

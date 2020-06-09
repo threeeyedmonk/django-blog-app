@@ -10,12 +10,14 @@
     <table class="table table-dark">
 
       {% for post in post_list %}
+        {% if not post.draft_state %}
         <tr>
           <td>
             <a style="color:white;" href="post/{{ post.id }}"><span style="font-size:1.5em;">{{ post.post_title }}</span></a><br>
-            <span>Posted by <strong>{{ post.author }}</strong> on {{ post.post_created }}</span>
+            <span>Posted by <strong>{{ post.author }}</strong> on {{ post.post_published }}</span>
           </td>
         </tr>
+        {% endif %}
       {% endfor %}
     </table>
   </div>

@@ -8,10 +8,36 @@
     <p>Author: <strong>{{ post_detail.author }}</strong></p>
     <p>Published on {{ post_detail.post_created }}</p>
     <div class="jumbotron">
-      <p>{{ post_detail.post_text }}</p>
+      <p>{{ post_detail.post_text | safe }}</p>
     </div>
 
   </div>
+</div>
+
+<div class="comment-wrapper">
+
+  <div class="comment-form">
+    <h2>Leave a reply</h2>
+    <form method="POST">
+      {{ form.as_p }}
+      {% csrf_token %}
+      <input type="submit" class="btn btn-primary" value="Post Comment">
+    </form>
+  </div>
+  {% for comment in post_detail.comments.all|dictsortreversed:"comment_created" %}
+  <div class="comment-view">
+    <div class="comment-img">
+      {% if comment.name in users %}
+          <img src="/blog{{ comment.name.userprofile.profile_image.url }}" alt="No Img!" width=75 height=75 />
+      {% endif %}
+    </div>
+    <div class="comment-content">
+      <p class='comment-name'><strong>{{ comment.name }}</strong></p>
+      <p class='comment-text'>{{ comment.comment_text }}</p>
+      <p class='comment-date'>{{ comment.comment_created }}</p>
+    </div>
+  </div>  <!-- End of comment-view -->
+  {% endfor %}
 </div>
 
 {% endblock %}

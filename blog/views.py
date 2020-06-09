@@ -1,17 +1,27 @@
-from django.shortcuts import render, redirect
-from blog.forms import UserForm, UserProfileForm, CreatePostForm
+from django.shortcuts import render, redirect, get_object_or_404
+from blog.forms import UserForm, UserProfileForm, CreatePostForm, AddCommentForm
 from blog.models import Post, UserProfile
+from django.contrib.auth.models import User
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic import UpdateView
 
 from django.contrib.auth import login, logout, authenticate
 from django.urls import reverse
+from django.contrib import messages
+from django.utils import timezone
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 #@login_required
+
+class UpdatePostView(LoginRequiredMixin, UpdateView):
+    model = Post
+    template_name = 'blog/editpost.html'
+    fields = ['post_title', 'post_text']
+
 
 class UserProfileView(LoginRequiredMixin, DetailView):
     '''
@@ -27,15 +37,15 @@ class UserProfileView(LoginRequiredMixin, DetailView):
 class PostListView(ListView):
     model = Post
     template_name = 'blog/home.html'
-    ordering = ['-post_created']
+    ordering = ['-post_published']
 
-class PostDetailView(LoginRequiredMixin, DetailView):
-    '''
-    Displays post in a detailed view
-    '''
-    context_object_name = "post_detail"
-    model = Post
-    template_name = 'blog/postdetail.html'
+#class PostDetailView(LoginRequiredMixin, DetailView):
+#    '''
+#    Displays post in a detailed view
+#    '''
+#    context_object_name = "post_detail"
+#    model = Post
+#    template_name = 'blog/postdetail.html'
 
 @login_required
 def userlogout(request):
@@ -53,6 +63,12 @@ def createpost(request):
             new_form = form.save(commit=False)
             print(request.user)
             new_form.author = request.user
+            if 'draft' in request.POST:
+                new_form.draft_state = True
+                new_form.save()
+                return HttpResponse("Saved in Draft!")
+                return redirect('blog:showdrafts')
+            new_form.post_published = timezone.now()
             new_form.save()
             return redirect('blog:home')
         else:
@@ -91,7 +107,7 @@ def userlogin(request):
     if request.method == 'POST':
         uname = request.POST.get('username')
         pwd = request.POST.get('password')
-        print(str(uname) + '-' + str(pwd))
+        #print(str(uname) + '-' + str(pwd))
 
         user = authenticate(username=uname, password=pwd)
 
@@ -106,3 +122,46 @@ def userlogin(request):
 
     else:
         return render(request, 'blog/login.html', {})
+
+def addcomment(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    users = User.objects.all()
+
+    if request.method == "POST":
+        form = AddCommentForm(request.POST)
+
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.name = request.user
+            comment.post_title = post
+            comment.save()
+            return redirect('blog:postdetail', pk=post.pk)
+    else:
+        form = AddCommentForm()
+    return render(request, 'blog/postdetail.html', {'form': form,
+                                                    'post_detail': post,
+                                                    'users': users})
+
+
+class ShowDraftsListView(LoginRequiredMixin, ListView):
+    context_object_name = 'userprofile'
+    model = UserProfile
+    template_name = 'blog/showdrafts.html'
+
+class ShowPostsListView(LoginRequiredMixin, ListView):
+    context_object_name = 'userprofile'
+    model = UserProfile
+    template_name = 'blog/showposts.html'
+
+
+def deletepost(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        if 'yes' in request.POST:
+            post.delete()
+            messages.success(request, "Request post has been deleted.")
+            return redirect('blog:userprofile')
+        elif 'no' in request.POST:
+            return redirect('blog:userprofile')
+
+    return render(request, 'blog/deletepost.html', {'post': post})

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from blog.models import Post, UserProfile
+from blog.models import Post, UserProfile, CommentsTable
 
 class UserForm(forms.ModelForm):
     first_name = forms.CharField(widget=forms.TextInput(
@@ -79,14 +79,21 @@ class UserProfileForm(forms.ModelForm):
 class CreatePostForm(forms.ModelForm):
     post_title = forms.CharField(widget=forms.TextInput(
         attrs={
-            'class': 'form-control',
-        }
-    ))
-    post_text = forms.CharField(widget=forms.Textarea(
-        attrs={
-            'class': 'form-control',
+            'class': 'form-control form-text',
+            'placeholder': 'Enter Title Here...'
         }
     ))
     class Meta():
         model = Post
         fields = ['post_title', 'post_text']
+
+class AddCommentForm(forms.ModelForm):
+    comment_text = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter your comment here...',
+        }
+    ), label = '')
+    class Meta():
+        model = CommentsTable
+        fields = ['comment_text']

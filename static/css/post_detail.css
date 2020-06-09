@@ -1,0 +1,33 @@
+.comment-view{
+  margin-top: 15px;
+}
+
+.comment-content{
+  padding-left: 15px;
+}
+
+.form-text{
+  width: 80%;
+}
+
+.comment-name{
+  font-size: 20px;
+  color: Tomato;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.comment-text{
+  font-size: 18px;
+  margin: 0;
+  padding: 0;
+}
+
+.comment-date{
+  font-size: 15px;
+  color: #8C98A1;
+}
+
+.comment-view{
+  display: flex;
+}
