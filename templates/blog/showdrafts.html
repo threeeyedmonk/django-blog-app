@@ -7,7 +7,7 @@
   <table class="posts-table">
     <tr>
       <th width="50%">Title</th>
-      <th idth="25%">Published</th>
+      <th idth="25%">Created</th>
       <th width="12.5%"></th>
       <th width="12.5%"></th>
     </tr>
@@ -16,7 +16,7 @@
       <tr>
         <td><a style="color:black;" href="{% url 'blog:postdetail' post.pk %}"><h4>{{ post.post_title }}</h4></a></td>
         <td>{{ post.post_created }}</td>
-        <td><a href="{% url 'blog:updatepost' post.pk %}"><button class="btn btn-warning" type="button">Update</button></a></td>
+        <td><a href="{% url 'blog:updatedraft' post.pk %}"><button class="btn btn-warning" type="button">Edit</button></a></td>
         <td><a href="{% url 'blog:deletepost' post.pk %}"><button class="btn btn-danger" type="button">Delete</button></a></td>
       </tr>
       {% endif %}

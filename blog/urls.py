@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^alldrafts/post/(?P<pk>\d+)/$', views.addcomment, name='postdetail'),
     url(r'^allposts/post/(?P<pk>\d+)/$', views.addcomment, name='postdetail'),
     url(r'^allposts/post/update/(?P<pk>\d+)/$', views.UpdatePostView.as_view(), name='updatepost'),
+    url('^alldrafts/draft/update/(?P<pk>\d+)/$', views.updatedraft, name='updatedraft'),
     url(r'^posts/delete/(?P<pk>\d+)/$', views.deletepost, name='deletepost'),
     url(r'^profile/$', views.UserProfileView.as_view(), name = 'userprofile'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

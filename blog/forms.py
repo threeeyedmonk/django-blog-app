@@ -97,3 +97,8 @@ class AddCommentForm(forms.ModelForm):
     class Meta():
         model = CommentsTable
         fields = ['comment_text']
+
+class UpdateDraftForm(forms.ModelForm):
+    class Meta():
+        model = Post
+        fields = ['post_title', 'post_text']

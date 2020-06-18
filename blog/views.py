@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from blog.forms import UserForm, UserProfileForm, CreatePostForm, AddCommentForm
+from blog.forms import UserForm, UserProfileForm, CreatePostForm, AddCommentForm, UpdateDraftForm
 from blog.models import Post, UserProfile
 from django.contrib.auth.models import User
 from django.views.generic.list import ListView
@@ -19,6 +19,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class UpdatePostView(LoginRequiredMixin, UpdateView):
     model = Post
+    #form_class = UpdatePostForm
     template_name = 'blog/editpost.html'
     fields = ['post_title', 'post_text']
 
@@ -66,7 +67,6 @@ def createpost(request):
             if 'draft' in request.POST:
                 new_form.draft_state = True
                 new_form.save()
-                return HttpResponse("Saved in Draft!")
                 return redirect('blog:showdrafts')
             new_form.post_published = timezone.now()
             new_form.save()
@@ -122,6 +122,24 @@ def userlogin(request):
 
     else:
         return render(request, 'blog/login.html', {})
+
+def updatedraft(request, pk):
+    context = {}
+
+    obj = get_object_or_404(Post, pk=pk)
+    form = UpdateDraftForm(request.POST or None, instance = obj)
+
+    if form.is_valid():
+        post = form.save(commit=False)
+        if 'publish' in request.POST:
+            post.draft_state = False
+            post.post_published = timezone.now()
+        post.save()
+        return redirect('blog:showdrafts')
+
+    context['form'] = form
+    return render(request, 'blog/editdraft.html', context)
+
 
 def addcomment(request, pk):
     post = get_object_or_404(Post, pk=pk)
